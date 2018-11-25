@@ -12,13 +12,15 @@ class Room extends Component {
         super(props)
         this.state = {
             settingsVisible: false,
-            occupied: this.isOccupied(this.props.data.occupiedFrom, this.props.data.occupiedTo)
+            occupied: this.isOccupied(this.props.data.occupiedFrom, this.props.data.occupiedTo),
+            goalTemperature: 20.5,
+            occupancyState: "Not Reserved"
         };
         console.log(this.props.data);
     }
 
     componentDidMount() {
-        this.approximateGoalTemperature();
+        this.updateStats();
     }
 
     isOccupied(startDate, endDate) {
@@ -53,11 +55,16 @@ class Room extends Component {
 
     getOccupancyState = () => {
         if (this.state.occupied === 2) {
-            return (<p>{"Reserved until " + this.props.data.occupiedTo}</p>)
+            this.setState({occupancyState: (<p>{"Reserved until " + this.props.data.occupiedTo}</p>)})
         } else if (this.state.occupied === 3) {
-            return (<p> {"Reserved from " + this.props.data.occupiedFrom}</p >)
+            this.setState({occupancyState: (<p>{"Reserved from " + this.props.data.occupiedFrom}</p>)})
         }
-        return (<p>Not reserved</p>)
+        this.setState({occupancyState: (<p>Not reserved</p>)})
+    }
+
+    updateStats = () => {
+        this.getOccupancyState();
+        this.approximateGoalTemperature();
     }
 
     getGoalTemperatureState = () => {
@@ -75,6 +82,7 @@ class Room extends Component {
     }
 
     approximateGoalTemperature = () => {
+        console.log("test")
         if (!this.props.data.roomTemperature) {
             this.setState({ isThermostatOn: false });
             return;
@@ -131,9 +139,10 @@ class Room extends Component {
                     >
                         <h2>{"Room " + this.props.data.id}</h2>
                         <div className="data-container">
-                            {this.getOccupancyState()}
+                            {this.state.occupancyState}
                             <p>{"Temperature: " + this.props.data.roomTemperature + " C"}</p>
-                            {this.getGoalTemperatureState()}
+                            <p>{this.state.isThermostatOn && ("Goal Temperature " + this.state.goalTemperature + " C")}</p>
+                            <p>{!this.state.isThermostatOn && ("Thermostat Off")}</p>
                         </div>
                         <div className="slider-container">
                             <Slider
@@ -143,7 +152,10 @@ class Room extends Component {
                                 disabled={true}
                             />
                         </div>
-                        <ReserverRoomForm roomId={this.props.data.id}/>
+                        <ReserverRoomForm 
+                            roomId={this.props.data.id}
+                            updateTemperature={() => this.updateStats()}
+                        />
                     </div>
                 </Drawer>
             </div>

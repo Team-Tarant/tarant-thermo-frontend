@@ -41,7 +41,7 @@ export default class ReserverRoomForm extends React.Component {
   }
 
   onFormSubmit(e) {
-
+    
     /*{
 	"occupiedFrom": "2018-11-25T13:40:26.326Z",
 	"occupiedTo": "2019-07-18T21:58:26.326Z"
@@ -52,7 +52,10 @@ export default class ReserverRoomForm extends React.Component {
       occupiedFrom: this.state.occupacyStart,
       occupiedTo: this.state.occupacyEnd
     }), {headers: {'content-type': 'application/json'}})
-    .then(() => console.log('Added reservation'))
+    .then(() =>{ 
+      console.log('Added reservation')
+      this.props.updateTemperature()
+    })
     .catch(e => console.error(e))
   }
 }
