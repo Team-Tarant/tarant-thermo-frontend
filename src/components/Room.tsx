@@ -28,7 +28,7 @@ class Room extends Component {
         if (currentDate > dateFrom && currentDate < dateTo) {
             return 2;
         }
-        this.hoursUntilOccupied = Math.abs(dateFrom - dateTo) / 36e5;
+        this.hoursUntilOccupied = Math.abs(currentDate - dateFrom) / 36e5;
         return 3;
     }
 
@@ -59,32 +59,44 @@ class Room extends Component {
         return (<p>Not reserved</p>)
     }
 
+    getGoalTemperatureState = () => {
+        if (this.state.isThermostatOn) {
+            return (<p>{"Goal Temperature: " + this.state.goalTemperature + " C"}</p>)
+        }
+        return (<p>{"Thermostat Turned Off"}</p >)
+    }
+
     approximateGoalTemperature = () => {
         if (!this.props.data.roomTemperature) {
-            this.setState({isThermostatOn: false});
+            this.setState({ isThermostatOn: false });
             return;
         }
-        this.setState({goalTemperature: 20.5});
+        this.setState({ goalTemperature: 20.5 });
         if (this.state.occupied === 3
             && this.hoursUntilOccupied >= 0
-            && this.hoursUntilOccupied * 2 < Math.abs(this.optimalTemperature - this.props.data.roomTemperature)) {
+            && this.hoursUntilOccupied / 2 < Math.abs(this.optimalTemperature - this.props.data.roomTemperature)) {
+            console.log(this.props.data.id)
             if (this.props.outsideTemperature > this.optimalTemperature
                 && this.props.data.roomTemperature > this.optimalTemperature) {
-                    this.setState({goalTemperature: this.optimalTemperature
-                    - Math.min(this.props.data.roomTemperature, (this.hoursUntilOccupied / 2))});
-                    this.setState({isThermostatOn: true});
+                this.setState({
+                    goalTemperature: Math.min(this.optimalTemperature
+                        + (this.hoursUntilOccupied / 2), this.props.outsideTemperature)
+                });
+                this.setState({ isThermostatOn: true });
             } else if (this.props.outsideTemperature <= this.optimalTemperature
                 && this.props.data.roomTemperature < this.optimalTemperature) {
-                    this.setState({goalTemperature: this.optimalTemperature
-                    - Math.min(0, this.optimalTemperature + (this.hoursUntilOccupied / 2))});
-                    this.setState({isThermostatOn: true});
+                this.setState({
+                    goalTemperature: Math.max(this.optimalTemperature
+                        - (this.hoursUntilOccupied / 2), this.props.outsideTemperature)
+                });
+                this.setState({ isThermostatOn: true });
             } else {
-                this.setState({isThermostatOn: false});
+                this.setState({ isThermostatOn: false });
             }
         } else if (this.state.occupied === 2) {
-            this.setState({isThermostatOn: true});
+            this.setState({ isThermostatOn: true });
         } else {
-            this.setState({isThermostatOn: false});
+            this.setState({ isThermostatOn: false });
         }
     }
 
@@ -109,7 +121,7 @@ class Room extends Component {
                         <div className="data-container">
                             {this.getOccupancyState()}
                             <p>{"Temperature: " + this.props.data.roomTemperature + " C"}</p>
-                            <p>{"Goal Temperature: " + this.state.goalTemperature + " C"}</p>
+                            {this.getGoalTemperatureState()}
                         </div>
                         <div className="slider-container">
                             <Slider
