@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Drawer } from '@material-ui/core';
 import { Slider } from '@material-ui/lab';
 import '../styles/Room.scss'
+import ReserverRoomForm from './ReserveRoomForm'
 
 class Room extends Component {
     private hoursUntilOccupied: number = 0;
@@ -119,6 +120,7 @@ class Room extends Component {
                                 disabled={true}
                             />
                         </div>
+                        <ReserverRoomForm roomId={this.props.data.id}/>
                     </div>
                 </Drawer>
             </div>
