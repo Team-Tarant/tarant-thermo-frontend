@@ -66,6 +66,13 @@ class Room extends Component {
         return (<p>{"Thermostat Turned Off"}</p >)
     }
 
+    temperatureError = () => {
+        if (Math.abs(this.state.goalTemperature - this.props.data.roomTemperature) > 5) {
+            return true
+        }
+        return false
+    }
+
     approximateGoalTemperature = () => {
         if (!this.props.data.roomTemperature) {
             this.setState({ isThermostatOn: false });
@@ -106,6 +113,10 @@ class Room extends Component {
                 <div className="room"
                     onClick={this.openSettings}>
                     <h4>{"Room " + this.props.data.id}</h4>
+                    <div className="temperature-box">
+                        <h5>{this.props.data.roomTemperature + " C"}</h5>
+                    </div>
+                    {this.temperatureError() && (<h1>!!</h1>)}
                 </div>
                 <Drawer
                     className="settings-drawer"

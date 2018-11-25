@@ -1,7 +1,8 @@
 @import 'colors';
 
 .room {
-  display: flex;
+  display: block;
+  flex-direction: vertical;
   width: 9rem;
   height: 13rem;
   margin-left: 0.5rem;
@@ -16,6 +17,14 @@
   color: $text-offset;
   text-align: center;
   justify-content: center;
+}
+
+h1 {
+  color: red;
+}
+
+.temperature-block {
+  margin-bottom: 2rem;
 }
 
 .settings-container {
