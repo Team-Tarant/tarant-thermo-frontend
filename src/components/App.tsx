@@ -29,9 +29,9 @@ class App extends Component {
     try {
       const response = await axios.get(serverUrl + '/api/rooms');
       console.log(response)
-      this.setState({ 
+      this.setState({
         rooms: response.data,
-        isLoading: false 
+        isLoading: false
       });
     } catch (error) {
       console.log(error)
@@ -55,7 +55,7 @@ class App extends Component {
         </SetupView>
     } else {
       view = <MainView
-        rooms = {this.state.rooms}
+        rooms={this.state.rooms}
       />
     }
     return (
