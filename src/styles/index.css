@@ -1,0 +1,9 @@
+body {
+  background: #457B9D;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: roboto;
+  padding: 10rem;
+}

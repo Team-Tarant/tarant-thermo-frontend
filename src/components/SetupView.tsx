@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../styles/SetupView.css';
+import '../styles/SetupView.scss';
 
 class SetupView extends Component {
     render() {
@@ -9,4 +9,4 @@ class SetupView extends Component {
     }
 }
 
-export default SetupView;
+export default SetupView
